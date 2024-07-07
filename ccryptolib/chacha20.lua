@@ -1,6 +1,5 @@
 --- The ChaCha20 stream cipher.
 
-local expect  = require "cc.expect".expect
 local lassert = require "ccryptolib.internal.util".lassert
 local packing = require "ccryptolib.internal.packing"
 
@@ -19,16 +18,16 @@ local u16x4 = packing.compileUnpack(fmt16x4)
 --- @param offset number? The block offset to generate the keystream at. Defaults to 1.
 --- @return string out The resulting ciphertext or plaintext.
 local function crypt(key, nonce, message, rounds, offset)
-    expect(1, key, "string")
+    checkArg(1, key, "string")
     lassert(#key == 32, "key length must be 32", 2)
-    expect(2, nonce, "string")
+    checkArg(2, nonce, "string")
     lassert(#nonce == 12, "nonce length must be 12", 2)
-    expect(3, message, "string")
-    rounds = expect(4, rounds, "number", "nil") or 20
+    checkArg(3, message, "string")
+    rounds = checkArg(4, rounds, "number", "nil") or 20
     lassert(rounds % 2 == 0, "round number must be even", 2)
     lassert(rounds >= 8, "round number must be no smaller than 8", 2)
     lassert(rounds <= 20, "round number must be no larger than 20", 2)
-    offset = expect(5, offset, "number", "nil") or 1
+    offset = checkArg(5, offset, "number", "nil") or 1
     lassert(offset % 1 == 0, "offset must be an integer", 2)
     lassert(offset >= 0, "offset must be nonnegative", 2)
     lassert(#message + 64 * offset <= 2 ^ 38, "offset too large", 2)

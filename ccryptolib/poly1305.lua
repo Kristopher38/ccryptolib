@@ -1,6 +1,5 @@
 --- The Poly1305 one-time authenticator.
 
-local expect  = require "cc.expect".expect
 local lassert = require "ccryptolib.internal.util".lassert
 local packing = require "ccryptolib.internal.packing"
 
@@ -12,9 +11,9 @@ local p4x4 = packing.compilePack(fmt4x4)
 --- @param message string The message to authenticate.
 --- @return string tag The 16-byte authentication tag.
 local function mac(key, message)
-    expect(1, key, "string")
+    checkArg(1, key, "string")
     lassert(#key == 32, "key length must be 32", 2)
-    expect(2, message, "string")
+    checkArg(2, message, "string")
 
     -- Pad message.
     local pbplen = #message - 15

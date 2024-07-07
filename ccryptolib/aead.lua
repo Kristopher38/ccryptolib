@@ -1,6 +1,5 @@
 --- The ChaCha20Poly1305AEAD authenticated encryption with associated data (AEAD) construction.
 
-local expect   = require "cc.expect".expect
 local lassert = require "ccryptolib.internal.util".lassert
 local packing  = require "ccryptolib.internal.packing"
 local chacha20 = require "ccryptolib.chacha20"
@@ -19,13 +18,13 @@ local bxor = bit32.bxor
 --- @return string ctx The ciphertext.
 --- @return string tag The 16-byte authentication tag.
 local function encrypt(key, nonce, message, aad, rounds)
-    expect(1, key, "string")
+    checkArg(1, key, "string")
     lassert(#key == 32, "key length must be 32", 2)
-    expect(2, nonce, "string")
+    checkArg(2, nonce, "string")
     lassert(#nonce == 12, "nonce length must be 12", 2)
-    expect(3, message, "string")
-    expect(4, aad, "string")
-    rounds = expect(5, rounds, "number", "nil") or 20
+    checkArg(3, message, "string")
+    checkArg(4, aad, "string")
+    rounds = checkArg(5, rounds, "number", "nil") or 20
     lassert(rounds % 2 == 0, "round number must be even", 2)
     lassert(rounds >= 8, "round number must be no smaller than 8", 2)
     lassert(rounds <= 20, "round number must be no larger than 20", 2)
@@ -56,15 +55,15 @@ end
 --- @param rounds number The number of rounds used on encryption.
 --- @return string? msg The decrypted plaintext. Or nil on auth failure.
 local function decrypt(key, nonce, tag, ciphertext, aad, rounds)
-    expect(1, key, "string")
+    checkArg(1, key, "string")
     lassert(#key == 32, "key length must be 32", 2)
-    expect(2, nonce, "string")
+    checkArg(2, nonce, "string")
     lassert(#nonce == 12, "nonce length must be 12", 2)
-    expect(3, tag, "string")
+    checkArg(3, tag, "string")
     lassert(#tag == 16, "tag length must be 16", 2)
-    expect(4, ciphertext, "string")
-    expect(5, aad, "string")
-    rounds = expect(6, rounds, "number", "nil") or 20
+    checkArg(4, ciphertext, "string")
+    checkArg(5, aad, "string")
+    rounds = checkArg(6, rounds, "number", "nil") or 20
     lassert(rounds % 2 == 0, "round number must be even", 2)
     lassert(rounds >= 8, "round number must be no smaller than 8", 2)
     lassert(rounds <= 20, "round number must be no larger than 20", 2)

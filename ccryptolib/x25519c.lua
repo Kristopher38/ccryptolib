@@ -1,4 +1,3 @@
-local expect = require "cc.expect".expect
 local lassert = require "ccryptolib.internal.util".lassert
 local fq     = require "ccryptolib.internal.fq"
 local fp     = require "ccryptolib.internal.fp"
@@ -10,7 +9,7 @@ local random = require "ccryptolib.random"
 --- @param sk string A random 32-byte Curve25519 secret key.
 --- @return string msk A masked secret key.
 local function mask(sk)
-    expect(1, sk, "string")
+    checkArg(1, sk, "string")
     lassert(#sk == 32, "secret key length must be 32", 2)
     local mask = random.random(32)
     local x = fq.decodeClamped(sk)
@@ -23,7 +22,7 @@ end
 --- @param sk string A random 32-byte Edwards25519 secret key.
 --- @return string msk A masked secret key.
 local function maskS(sk)
-    expect(1, sk, "string")
+    checkArg(1, sk, "string")
     lassert(#sk == 32, "secret key length must be 32", 2)
     return mask(sha512.digest(sk):sub(1, 32))
 end
@@ -32,7 +31,7 @@ end
 --- @param msk string A masked secret key.
 --- @return string msk The same secret key, but with another mask.
 local function remask(msk)
-    expect(1, msk, "string")
+    checkArg(1, msk, "string")
     lassert(#msk == 64, "masked secret key length must be 64", 2)
     local newMask = random.random(32)
     local xr = fq.decode(msk:sub(1, 32))
@@ -49,7 +48,7 @@ end
 --- @param msk string A masked secret key.
 --- @return string esk The ephemeral half of the masked secret key.
 local function ephemeralSk(msk)
-    expect(1, msk, "string")
+    checkArg(1, msk, "string")
     lassert(#msk == 64, "masked secret key length must be 64", 2)
     return msk:sub(33)
 end
@@ -115,7 +114,7 @@ end
 --- Returns the X25519 public key of this masked key.
 --- @param msk string A masked secret key.
 local function publicKey(msk)
-    expect(1, msk, "string")
+    checkArg(1, msk, "string")
     lassert(#msk == 64, "masked secret key length must be 64", 2)
     return (exchangeOnPoint(msk, c25.G))
 end
@@ -134,9 +133,9 @@ end
 --- @return string sss The shared secret between the public key and the static half of the masked key.
 --- @return string sse The shared secret betwen the public key and the ephemeral half of the masked key.
 local function exchange(sk, pk)
-    expect(1, sk, "string")
+    checkArg(1, sk, "string")
     lassert(#sk == 64, "masked secret key length must be 64", 2)
-    expect(2, pk, "string")
+    checkArg(2, pk, "string")
     lassert(#pk == 32, "public key length must be 32", 2) --- @cast pk String32
     return exchangeOnPoint(sk, c25.decode(pk))
 end

@@ -1,6 +1,5 @@
 --- The BLAKE3 cryptographic hash function.
 
-local expect = require "cc.expect".expect
 local lassert = require "ccryptolib.internal.util".lassert
 local packing = require "ccryptolib.internal.packing"
 
@@ -207,8 +206,8 @@ end
 --- @param len number? The desired hash length, in bytes. Defaults to 32.
 --- @return string hash The hash.
 local function digest(message, len)
-    expect(1, message, "string")
-    len = expect(2, len, "number", "nil") or 32
+    checkArg(1, message, "string")
+    len = checkArg(2, len, "number", "nil") or 32
     lassert(len % 1 == 0, "desired output length must be an integer", 2)
     lassert(len >= 1, "desired output length must be positive", 2)
     return blake3(IV, 0, message, len)
@@ -220,10 +219,10 @@ end
 --- @param len number? The desired hash length, in bytes. Defaults to 32.
 --- @return string hash The keyed hash.
 local function digestKeyed(key, message, len)
-    expect(1, key, "string")
+    checkArg(1, key, "string")
     lassert(#key == 32, "key length must be 32", 2)
-    expect(2, message, "string")
-    len = expect(3, len, "number", "nil") or 32
+    checkArg(2, message, "string")
+    len = checkArg(3, len, "number", "nil") or 32
     lassert(len % 1 == 0, "desired output length must be an integer", 2)
     lassert(len >= 1, "desired output length must be positive", 2)
     return blake3({u8x4(fmt8x4, key, 1)}, KEYED_HASH, message, len)
@@ -233,15 +232,15 @@ end
 --- @param context string The context for the KDF.
 --- @return fun(material: string, len: number?): string kdf The KDF.
 local function deriveKey(context)
-    expect(1, context, "string")
+    checkArg(1, context, "string")
     local iv = {u8x4(fmt8x4, blake3(IV, DERIVE_KEY_CONTEXT, context, 32), 1)}
 
     --- Derives a key.
     --- @param material string The keying material.
     --- @param len number? The desired hash length, in bytes. Defaults to 32.
     return function(material, len)
-        expect(1, material, "string")
-        len = expect(2, len, "number", "nil") or 32
+        checkArg(1, material, "string")
+        len = checkArg(2, len, "number", "nil") or 32
         lassert(len % 1 == 0, "desired output length must be an integer", 2)
         lassert(len >= 1, "desired output length must be positive", 2)
         return blake3(iv, DERIVE_KEY_MATERIAL, material, len)

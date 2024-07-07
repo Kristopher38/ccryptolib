@@ -1,6 +1,5 @@
 --- The SHA256 cryptographic hash function.
 
-local expect  = require "cc.expect".expect
 local lassert = require "ccryptolib.internal.util".lassert
 local packing = require "ccryptolib.internal.packing"
 
@@ -79,7 +78,7 @@ end
 --- @param data string Input bytes.
 --- @return string hash The 32-byte hash value.
 local function digest(data)
-    expect(1, data, "string")
+    checkArg(1, data, "string")
 
     -- Pad input.
     local bitlen = #data * 8
@@ -105,12 +104,12 @@ local PBKDF2_CB_ITERATIONS = 50
 --- @param progress fun(iter: number)? An optional function to periodically call with the current iteration number as argument.
 --- @return string dk The 32-byte derived key.
 local function pbkdf2(password, salt, iter, progress)
-    expect(1, password, "string")
-    expect(2, salt, "string")
-    expect(3, iter, "number")
+    checkArg(1, password, "string")
+    checkArg(2, salt, "string")
+    checkArg(3, iter, "number")
     lassert(iter % 1 == 0, "iteration number must be an integer", 2)
     lassert(iter > 0, "iteration number must be positive", 2)
-    expect(4, progress, "function", "nil")
+    checkArg(4, progress, "function", "nil")
 
     -- Pad password.
     if #password > 64 then password = digest(password) end
