@@ -1,5 +1,6 @@
 --- Arithmetic on Curve25519's scalar field.
 
+local bit32 = require "bit32"
 local mp = require "ccryptolib.internal.mp"
 local util = require "ccryptolib.internal.util"
 local packing = require "ccryptolib.internal.packing"

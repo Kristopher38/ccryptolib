@@ -1,5 +1,6 @@
 --- The SHA512 cryptographic hash function.
 
+local bit32 = require "bit32"
 local packing = require "ccryptolib.internal.packing"
 
 local shl = bit32.lshift

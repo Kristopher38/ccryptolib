@@ -1,5 +1,6 @@
 --- The ChaCha20Poly1305AEAD authenticated encryption with associated data (AEAD) construction.
 
+local bit32 = require "bit32"
 local lassert = require "ccryptolib.internal.util".lassert
 local packing  = require "ccryptolib.internal.packing"
 local chacha20 = require "ccryptolib.chacha20"

@@ -1,5 +1,6 @@
 --- The ChaCha20 stream cipher.
 
+local bit32 = require "bit32"
 local lassert = require "ccryptolib.internal.util".lassert
 local packing = require "ccryptolib.internal.packing"
 
